@@ -17,14 +17,27 @@ where files will be renamed as follows:
 "test/dataset_sample/fu.png"    -> "test/dataset_sample_out/004.png"
 ```
 
-Arguments `--start_index`, `output_directory` and `--format` are optional. They specify output file format as follows:
+Arguments `--start_index`, `--output_directory` and `--format` are optional. They specify output file format as follows:
 
 ```
---start_index      number name of the first image, default value is 1
---format python    style formatter with a single input (number), default value is {:06}
---output_director  specifies output directory, if not specified, output directory is set to 
-                   dataset directory. If output directory is same as the dataset directory, files
-                   are only renamed (moved) instead of copied.
+--start_index       number name of the first image, default value is 1
+--format python     style formatter with a single input (number), default value is {:06}
+--output_directory  specifies output directory, if not specified, output directory is set to 
+                    dataset directory. If output directory is same as the dataset directory, files
+                    are only renamed (moved) instead of copied.
 
 ```
 
+## Transpose images with EXIF orientation
+
+Utility to transpose images according to EXIF orientation tag. If tag is not present, image is not transposed. An example of calling transpose script:
+
+ ```
+ $ python3 exif_transposer.py test/dataset_sample --output_directory test/dataset_sample_out
+ ```
+
+ ```
+--output_directory  is optional and specifies the output directory, if not specified, output 
+                     directoryis set to dataset directory. If output directory is same as the 
+                     dataset directory, files are only renamed (moved) instead of copied.
+```

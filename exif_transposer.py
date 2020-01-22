@@ -5,7 +5,7 @@ Tranposes images according to EXIF orientation flag.
 
 import os
 import argparse
-from PIL import Image, ImageOps
+from PIL import Image, ExifTags
 
 
 # argument parsing
@@ -28,13 +28,37 @@ FILES_COUNT = len(FILES_LIST)
 
 
 # transpose images
-print(FILES_LIST)
 for i, filename in enumerate(FILES_LIST):
     print("Prcessing {}/{} {}".format(i + 1, FILES_COUNT, filename))
 
     # based on https://stackoverflow.com/questions/13872331/rotating-an-image-with-orientation-specified-in-exif-using-python-without-pil-in
     img = Image.open(os.path.join(DATASET_DIRECTORY, filename))
-    img = ImageOps.exif_transpose(img) # type: Image
+    try:
+        # find orientation key
+        orientation_key = None
+        for key in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[key] == 'Orientation':
+                orientation_key = key
+                break
+
+        # transpose
+        exif = dict(img._getexif().items())
+        orientation = exif[orientation_key]
+
+        if orientation in (3, 4):
+            img = img.rotate(180, expand=True)
+        elif orientation in (5, 6):
+            img = img.rotate(270, expand=True)
+        elif orientation in (7, 8):
+            img = img.rotate(90, expand=True)
+
+        if orientation in (2, 4, 5, 7):
+            img = img.mirror()
+
+    except (AttributeError, KeyError, IndexError):
+        # cases: image don't have getexif
+        pass
 
     img.save(os.path.join(OUTPUT_DIRECTORY, filename))
+    img.close()
 

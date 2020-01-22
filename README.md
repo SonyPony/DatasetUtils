@@ -1,4 +1,4 @@
-# DatasetUtils
+# Dataset utils
 
 Set of utilities for the dataset preprocessing.
 
